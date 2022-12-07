@@ -48,7 +48,6 @@ def one_hot_encode(df, cols):
     df = df.drop(columns=cols)
     return df
 
-
 def target_encode(df, y, col):
     dict_map = dict()
     unique_value = df[col].unique()
