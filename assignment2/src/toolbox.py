@@ -18,7 +18,11 @@ def train_test_split(df, y=None, random_state=None, train_size=0.7):
                 y[train_index].reset_index(drop=True), y[test_index].reset_index(drop=True))
     return (df.loc[train_index].reset_index(drop=True), df.loc[test_index].reset_index(drop=True))
 
-def cross_validation(X:np.ndarray, y:np.ndarray, k=5, random_state=None):
+def cross_validation(X, y, k=5, random_state=None):
+    if isinstance(X, pd.DataFrame):
+        columns = X.columns
+        X = X.to_numpy()
+
     index = [range(len(X))]
     cv_len = len(X) // k
     if random_state is None:
@@ -34,7 +38,7 @@ def cross_validation(X:np.ndarray, y:np.ndarray, k=5, random_state=None):
         train_y = np.concatenate([y[:start], y[end:]], axis=0)
         val_X = X[start:end]
         val_y = y[start:end]
-        yield train_X, val_X, train_y, val_y, i
+        yield pd.DataFrame(train_X, columns=columns), pd.DataFrame(val_X, columns=columns), pd.Series(train_y), pd.Series(val_y), i
 
 def one_hot_encode(df, cols):
     for col in cols:
